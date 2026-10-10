@@ -1,0 +1,33 @@
+libraries:
+  - match: "OpenSSL 1.0"
+    name: OpenSSL
+    quantum_vulnerable_default: true
+    note: "Legacy OpenSSL 1.0.x — no native PQC support, default ciphers are classical (RSA/ECDHE)."
+  - match: "OpenSSL 3."
+    name: OpenSSL
+    quantum_vulnerable_default: true
+    note: "OpenSSL 3.x supports pluggable providers; PQC (ML-KEM) available via oqs-provider, not default."
+  - match: "BoringSSL"
+    name: BoringSSL
+    quantum_vulnerable_default: true
+    note: "Google's fork; has experimental hybrid X25519+Kyber support behind flags."
+  - match: "libsodium"
+    name: libsodium
+    quantum_vulnerable_default: true
+    note: "Modern, safe classical primitives (X25519/Ed25519) — still quantum-vulnerable, no PQC yet."
+  - match: "mbed TLS"
+    name: mbedTLS
+    quantum_vulnerable_default: true
+    note: "Common in embedded/IoT; classical RSA/ECC only by default."
+  - match: "wolfSSL"
+    name: wolfSSL
+    quantum_vulnerable_default: true
+    note: "Has an experimental liboqs integration for ML-KEM/ML-DSA."
+  - match: "bouncycastle"
+    name: BouncyCastle
+    quantum_vulnerable_default: true
+    note: "Java/C# crypto provider; recent versions ship ML-KEM/ML-DSA implementations opt-in."
+  - match: "node-forge"
+    name: node-forge
+    quantum_vulnerable_default: true
+    note: "Pure-JS crypto, classical algorithms only."

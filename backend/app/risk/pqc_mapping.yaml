@@ -1,0 +1,114 @@
+mappings:
+  RSA:
+    single: "Migrate signatures to ML-DSA (Dilithium); migrate key exchange to ML-KEM (Kyber)"
+    hybrid: "Hybrid X25519+ML-KEM for key exchange during transition; hybrid ECDSA+ML-DSA for signatures"
+    latency_impact: medium
+    size_impact: "ML-KEM ciphertexts ~1KB vs ~256 bytes for RSA-2048; ML-DSA signatures ~2.5KB vs ~256 bytes for RSA-2048"
+    library_maturity: production-ready
+    rationale: "RSA is fully broken by Shor's algorithm; NIST-standardised ML-KEM/ML-DSA are the direct replacements."
+  DSA:
+    single: "Migrate to ML-DSA (Dilithium)"
+    hybrid: "Hybrid ECDSA+ML-DSA signatures during transition"
+    latency_impact: medium
+    size_impact: "ML-DSA signatures are ~2.5KB vs ~40-70 bytes for DSA"
+    library_maturity: production-ready
+    rationale: "DSA is fully broken by Shor's algorithm."
+  ECDSA:
+    single: "Migrate to ML-DSA (Dilithium) or SLH-DSA (SPHINCS+) for long-term/stateless signing"
+    hybrid: "Hybrid ECDSA+ML-DSA signatures during transition"
+    latency_impact: medium
+    size_impact: "ML-DSA signatures ~2.5KB vs ~64-72 bytes for ECDSA P-256"
+    library_maturity: production-ready
+    rationale: "ECDSA is fully broken by Shor's algorithm."
+  "Diffie-Hellman":
+    single: "Migrate to ML-KEM (Kyber)"
+    hybrid: "Hybrid X25519+ML-KEM key exchange during transition"
+    latency_impact: low
+    size_impact: "ML-KEM ciphertexts ~1KB vs a few hundred bytes for classical DH"
+    library_maturity: production-ready
+    rationale: "Diffie-Hellman key exchange is fully broken by Shor's algorithm."
+  DES:
+    single: "Migrate to AES-256"
+    hybrid: "Not applicable — symmetric algorithm, no hybrid scheme needed"
+    latency_impact: low
+    size_impact: "Same block size class; negligible overhead"
+    library_maturity: production-ready
+    rationale: "DES is classically broken (56-bit key); not a quantum-specific issue but still urgent."
+  "3DES":
+    single: "Migrate to AES-256"
+    hybrid: "Not applicable — symmetric algorithm"
+    latency_impact: low
+    size_impact: "Negligible overhead; AES is faster than 3DES in most implementations"
+    library_maturity: production-ready
+    rationale: "3DES is deprecated (NIST disallowed after 2023) and slow; AES-256 is the standard replacement."
+  RC4:
+    single: "Migrate to AES-256-GCM (or ChaCha20-Poly1305)"
+    hybrid: "Not applicable — symmetric algorithm"
+    latency_impact: low
+    size_impact: "Negligible"
+    library_maturity: production-ready
+    rationale: "RC4 has known statistical biases and is classically broken; must be replaced regardless of quantum risk."
+  AES:
+    single: "Ensure AES-256 (not AES-128) is used; keep GCM/CCM authenticated modes"
+    hybrid: "Not applicable — symmetric algorithm"
+    latency_impact: low
+    size_impact: "None — same primitive, larger key"
+    library_maturity: production-ready
+    rationale: "Grover's algorithm halves effective symmetric key strength; AES-256 keeps 128-bit post-quantum security margin."
+  "AES-128":
+    single: "Upgrade to AES-256"
+    hybrid: "Not applicable — symmetric algorithm"
+    latency_impact: low
+    size_impact: "None — same primitive, larger key"
+    library_maturity: production-ready
+    rationale: "AES-128 drops to ~64-bit effective security under Grover's algorithm."
+  "AES-256":
+    single: "Keep — no action needed"
+    hybrid: "Not applicable — symmetric algorithm"
+    latency_impact: none
+    size_impact: "None"
+    library_maturity: production-ready
+    rationale: "AES-256 retains a 128-bit security margin even under Grover's algorithm — adequately quantum-resistant."
+  MD5:
+    single: "Migrate to SHA-256 or SHA-3"
+    hybrid: "Not applicable — hash function"
+    latency_impact: low
+    size_impact: "Larger digest (32 bytes vs 16), negligible in practice"
+    library_maturity: production-ready
+    rationale: "MD5 is broken by classical collision attacks, independent of quantum computing."
+  SHA1:
+    single: "Migrate to SHA-256 or SHA-3"
+    hybrid: "Not applicable — hash function"
+    latency_impact: low
+    size_impact: "Larger digest (32 bytes vs 20), negligible in practice"
+    library_maturity: production-ready
+    rationale: "SHA-1 is broken by classical collision attacks (SHAttered, 2017)."
+  "TLS/SSL Context":
+    single: "Enforce TLS 1.3; track PQC key-exchange support in your TLS library"
+    hybrid: "Enable hybrid X25519+ML-KEM key exchange where the TLS stack supports it (e.g. OpenSSL 3.2+ with oqs-provider)"
+    latency_impact: medium
+    size_impact: "Slightly larger ClientHello with hybrid key shares"
+    library_maturity: emerging
+    rationale: "TLS key exchange typically relies on ECDHE, which Shor's algorithm breaks."
+  "Weak TLS protocol version":
+    single: "Disable SSLv2/v3/TLS1.0/1.1; require TLS 1.2 minimum, prefer TLS 1.3"
+    hybrid: "Not applicable"
+    latency_impact: low
+    size_impact: "None"
+    library_maturity: production-ready
+    rationale: "Deprecated protocol versions have known classical vulnerabilities and no PQC path."
+  "Weak cipher suite":
+    single: "Restrict cipher suite list to AEAD suites (AES-GCM, ChaCha20-Poly1305) with ECDHE/DHE"
+    hybrid: "Not applicable"
+    latency_impact: low
+    size_impact: "None"
+    library_maturity: production-ready
+    rationale: "RC4/DES/EXPORT/NULL/MD5 ciphers are classically broken or provide no real protection."
+
+default:
+  single: "Review manually — no direct PQC mapping available for this algorithm"
+  hybrid: "Review manually"
+  latency_impact: unknown
+  size_impact: unknown
+  library_maturity: unknown
+  rationale: "Algorithm not covered by the current mapping table."

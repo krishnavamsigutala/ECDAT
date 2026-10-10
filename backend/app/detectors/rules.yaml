@@ -1,0 +1,310 @@
+# Crypto detection rules used by the python/java/c/js/go detectors.
+# Each rule: id, language, pattern (regex), algorithm_name, category, severity_hint
+rules:
+  - id: py-hashlib-md5
+    language: python
+    pattern: 'hashlib\.md5\s*\('
+    algorithm_name: MD5
+    category: hash
+    severity_hint: high
+
+  - id: py-hashlib-sha1
+    language: python
+    pattern: 'hashlib\.sha1\s*\('
+    algorithm_name: SHA1
+    category: hash
+    severity_hint: high
+
+  - id: py-hashlib-sha256
+    language: python
+    pattern: 'hashlib\.sha256\s*\('
+    algorithm_name: SHA256
+    category: hash
+    severity_hint: low
+
+  - id: py-hashlib-sha384-512
+    language: python
+    pattern: 'hashlib\.sha(384|512)\s*\('
+    algorithm_name: SHA384/SHA512
+    category: hash
+    severity_hint: low
+
+  - id: py-des
+    language: python
+    pattern: 'Crypto\.Cipher\.DES\b|DES\.new\s*\('
+    algorithm_name: DES
+    category: symmetric
+    severity_hint: high
+
+  - id: py-3des
+    language: python
+    pattern: 'Crypto\.Cipher\.DES3\b|DES3\.new\s*\('
+    algorithm_name: 3DES
+    category: symmetric
+    severity_hint: high
+
+  - id: py-rc4
+    language: python
+    pattern: 'Crypto\.Cipher\.ARC4\b|ARC4\.new\s*\('
+    algorithm_name: RC4
+    category: symmetric
+    severity_hint: high
+
+  - id: py-aes
+    language: python
+    pattern: 'Crypto\.Cipher\.AES\b|AES\.new\s*\('
+    algorithm_name: AES
+    category: symmetric
+    severity_hint: low
+
+  - id: py-rsa-generate
+    language: python
+    pattern: 'RSA\.generate\s*\(\s*(\d+)'
+    algorithm_name: RSA
+    category: asymmetric
+    severity_hint: critical
+
+  - id: py-cryptography-rsa
+    language: python
+    pattern: 'rsa\.generate_private_key\s*\('
+    algorithm_name: RSA
+    category: asymmetric
+    severity_hint: critical
+
+  - id: py-cryptography-ec
+    language: python
+    pattern: 'ec\.generate_private_key\s*\(|ec\.ECDSA\s*\('
+    algorithm_name: ECDSA
+    category: asymmetric
+    severity_hint: critical
+
+  - id: py-dsa
+    language: python
+    pattern: 'dsa\.generate_private_key\s*\('
+    algorithm_name: DSA
+    category: asymmetric
+    severity_hint: critical
+
+  - id: py-dh
+    language: python
+    pattern: 'dh\.generate_parameters\s*\(|DiffieHellman'
+    algorithm_name: Diffie-Hellman
+    category: asymmetric
+    severity_hint: critical
+
+  - id: py-ssl-context
+    language: python
+    pattern: 'ssl\.SSLContext\s*\(|ssl\.wrap_socket\s*\('
+    algorithm_name: TLS/SSL Context
+    category: protocol
+    severity_hint: medium
+
+  - id: java-md5
+    language: java
+    pattern: 'MessageDigest\.getInstance\s*\(\s*"MD5"'
+    algorithm_name: MD5
+    category: hash
+    severity_hint: high
+
+  - id: java-sha1
+    language: java
+    pattern: 'MessageDigest\.getInstance\s*\(\s*"SHA-?1"'
+    algorithm_name: SHA1
+    category: hash
+    severity_hint: high
+
+  - id: java-sha256
+    language: java
+    pattern: 'MessageDigest\.getInstance\s*\(\s*"SHA-?256"'
+    algorithm_name: SHA256
+    category: hash
+    severity_hint: low
+
+  - id: java-cipher-des
+    language: java
+    pattern: 'Cipher\.getInstance\s*\(\s*"DES[^3]'
+    algorithm_name: DES
+    category: symmetric
+    severity_hint: high
+
+  - id: java-cipher-3des
+    language: java
+    pattern: 'Cipher\.getInstance\s*\(\s*"DESede'
+    algorithm_name: 3DES
+    category: symmetric
+    severity_hint: high
+
+  - id: java-cipher-rc4
+    language: java
+    pattern: 'Cipher\.getInstance\s*\(\s*"(ARCFOUR|RC4)'
+    algorithm_name: RC4
+    category: symmetric
+    severity_hint: high
+
+  - id: java-cipher-aes
+    language: java
+    pattern: 'Cipher\.getInstance\s*\(\s*"AES(/([A-Za-z0-9]+)/([A-Za-z0-9]+))?'
+    algorithm_name: AES
+    category: symmetric
+    severity_hint: low
+
+  - id: java-keypairgen-rsa
+    language: java
+    pattern: 'KeyPairGenerator\.getInstance\s*\(\s*"RSA"'
+    algorithm_name: RSA
+    category: asymmetric
+    severity_hint: critical
+
+  - id: java-keypairgen-dsa
+    language: java
+    pattern: 'KeyPairGenerator\.getInstance\s*\(\s*"DSA"'
+    algorithm_name: DSA
+    category: asymmetric
+    severity_hint: critical
+
+  - id: java-keypairgen-ec
+    language: java
+    pattern: 'KeyPairGenerator\.getInstance\s*\(\s*"EC"'
+    algorithm_name: ECDSA
+    category: asymmetric
+    severity_hint: critical
+
+  - id: java-bouncycastle
+    language: java
+    pattern: 'import\s+org\.bouncycastle'
+    algorithm_name: BouncyCastle library usage
+    category: library
+    severity_hint: medium
+
+  - id: c-openssl-evp-encrypt
+    language: c
+    pattern: 'EVP_EncryptInit_ex\s*\(|EVP_CipherInit_ex\s*\('
+    algorithm_name: OpenSSL EVP Cipher
+    category: symmetric
+    severity_hint: medium
+
+  - id: c-rsa-generate-key
+    language: c
+    pattern: 'RSA_generate_key(_ex)?\s*\('
+    algorithm_name: RSA
+    category: asymmetric
+    severity_hint: critical
+
+  - id: c-sha256-init
+    language: c
+    pattern: 'SHA256_Init\s*\('
+    algorithm_name: SHA256
+    category: hash
+    severity_hint: low
+
+  - id: c-md5-init
+    language: c
+    pattern: 'MD5_Init\s*\('
+    algorithm_name: MD5
+    category: hash
+    severity_hint: high
+
+  - id: c-des-set-key
+    language: c
+    pattern: 'DES_set_key\s*\('
+    algorithm_name: DES
+    category: symmetric
+    severity_hint: high
+
+  - id: js-require-crypto
+    language: javascript
+    pattern: "require\\s*\\(\\s*['\"]crypto['\"]\\s*\\)|from\\s+['\"]crypto['\"]"
+    algorithm_name: Node crypto module usage
+    category: library
+    severity_hint: low
+
+  - id: js-generatekeypair-rsa
+    language: javascript
+    pattern: "generateKeyPair(Sync)?\\s*\\(\\s*['\"]rsa['\"]"
+    algorithm_name: RSA
+    category: asymmetric
+    severity_hint: critical
+
+  - id: js-generatekeypair-ec
+    language: javascript
+    pattern: "generateKeyPair(Sync)?\\s*\\(\\s*['\"]ec['\"]"
+    algorithm_name: ECDSA
+    category: asymmetric
+    severity_hint: critical
+
+  - id: js-generatekeypair-dsa
+    language: javascript
+    pattern: "generateKeyPair(Sync)?\\s*\\(\\s*['\"]dsa['\"]"
+    algorithm_name: DSA
+    category: asymmetric
+    severity_hint: critical
+
+  - id: js-diffie-hellman
+    language: javascript
+    pattern: "createDiffieHellman\\s*\\(|createECDH\\s*\\("
+    algorithm_name: "Diffie-Hellman"
+    category: asymmetric
+    severity_hint: critical
+
+  - id: js-createsign-rsa
+    language: javascript
+    pattern: "createSign\\s*\\(\\s*['\"]RSA"
+    algorithm_name: RSA
+    category: asymmetric
+    severity_hint: critical
+
+  - id: js-createcipheriv
+    language: javascript
+    pattern: "createCipheriv\\s*\\(\\s*['\"]([A-Za-z0-9\\-]+)['\"]"
+    algorithm_name: Cipher (see snippet)
+    category: symmetric
+    severity_hint: medium
+
+  - id: js-createhash-md5
+    language: javascript
+    pattern: "createHash\\s*\\(\\s*['\"]md5['\"]\\s*\\)"
+    algorithm_name: MD5
+    category: hash
+    severity_hint: high
+
+  - id: js-createhash-sha1
+    language: javascript
+    pattern: "createHash\\s*\\(\\s*['\"]sha1['\"]\\s*\\)"
+    algorithm_name: SHA1
+    category: hash
+    severity_hint: high
+
+  - id: go-crypto-rsa
+    language: go
+    pattern: '"crypto/rsa"'
+    algorithm_name: RSA
+    category: asymmetric
+    severity_hint: critical
+
+  - id: go-crypto-ecdsa
+    language: go
+    pattern: '"crypto/ecdsa"'
+    algorithm_name: ECDSA
+    category: asymmetric
+    severity_hint: critical
+
+  - id: go-crypto-des
+    language: go
+    pattern: '"crypto/des"'
+    algorithm_name: DES
+    category: symmetric
+    severity_hint: high
+
+  - id: go-crypto-md5
+    language: go
+    pattern: '"crypto/md5"'
+    algorithm_name: MD5
+    category: hash
+    severity_hint: high
+
+  - id: go-crypto-sha256
+    language: go
+    pattern: '"crypto/sha256"'
+    algorithm_name: SHA256
+    category: hash
+    severity_hint: low

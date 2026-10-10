@@ -1,0 +1,37 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ecdat_data:/data
+    environment:
+      - DATABASE_URL=sqlite:////data/ecdat.db
+      - UPLOAD_DIR=/data/uploads
+      - FRONTEND_ORIGIN=http://localhost:5173
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  seed:
+    build: ./backend
+    depends_on:
+      backend:
+        condition: service_healthy
+    environment:
+      - ECDAT_API_BASE=http://backend:8000
+    command: ["python3", "scripts/seed_demo.py"]
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_BASE=http://localhost:8000
+    depends_on:
+      - backend
+
+volumes:
+  ecdat_data:
